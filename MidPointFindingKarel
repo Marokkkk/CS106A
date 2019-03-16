@@ -1,0 +1,96 @@
+/*
+ * File: MidpointFindingKarel.java
+ * Author : Chirag Maroke
+ * Date : 16 March 2019
+ * Citation : N.A.
+ * -------------------------------
+ * MidpointFindingKarel program finds the center of the street/row.
+ * For this, Karel fills extreme ends with beepers and recursively move inwards,
+ * filling all corners until innermost one(midpoint) is vacant, which is filled 
+ * with two beepers as distinctive marker. Finally, Karel cleans the
+ * street, leaving only one beeper in the center, and stands over it.
+ */
+
+import stanford.karel.*;
+
+public class MidpointFindingKarel extends SuperKarel {
+	public void run() {
+		PutBeepersAtEnds();
+    	FillBeepersInwards();
+    	CleanTheStreet();
+	}
+
+	/*Method help dealing with initial condition with extreme ends as wall.
+	 *Pre condition : Karel is standing on west street side, facing east. World
+	 *is free of any inner walls or beepers
+	 *Post conditions : Karel puts one beeper each at ends of the street. 
+	 */
+	private void PutBeepersAtEnds() {
+		putBeeper();
+		move();
+		while(frontIsClear()&& noBeepersPresent()) {
+			move();
+		}
+		putBeeper();
+		turnAround();
+		move();
+	}
+	
+	/*Method recursively fills corners inwards. 
+	 *Pre-conditions : Karel stands on empty corner 
+	 *Post-conditions : Every corner is filled with one beeper, barring midpoint,
+	 *which is filled with two beepers.
+	 */
+	private void FillBeepersInwards() {
+		while(noBeepersPresent()) {
+			move();
+		}
+		turnAround();
+		move();
+		move(); //double move to check if minimum of two corners are vacant
+		if(noBeepersPresent()) {
+			turnAround();
+			move();
+			putBeeper();
+			turnAround();
+			move();
+			FillBeepersInwards();
+		}
+		else { //if single corner is remaining vacant, it is midpoint
+		turnAround();
+		move();
+		putBeeper();
+		putBeeper(); //two Beeper at midpoint as marker
+		}
+	}
+	
+	/*Method leaves the final state with one beeper at midpoint by removing rest
+	 *of the beepers.
+	 * Pre-conditions : two beepers on midpoint and Karel standing on the position.
+	 * Post-conditions : one beeper at midpoint and Karel standing on it.
+	 */
+	private void CleanTheStreet() {
+		move();
+		while(frontIsClear()|| beepersPresent()) {
+			pickBeeper();
+			if(frontIsClear()) {
+				move();
+			}
+		}
+		turnAround();
+		while(frontIsClear()|| beepersPresent()) {
+			if(beepersPresent()) {
+				pickBeeper();
+			}
+			if(frontIsClear()) {
+				move();
+			}
+		}
+		turnAround();
+		while(noBeepersPresent()) {
+			move();
+		}
+	}
+	
+}
+
