@@ -1,0 +1,79 @@
+/*
+ * File: StoneMasonKarel.java
+ * Coder : Chirag Maroke
+ * Date : 16 March 2019
+ * Citation : N.A.
+ * --------------------------
+ * Program creates StoneMasonKarel subclass,
+ * and instructs to repair the columns spaced 4 units apart.
+ */
+
+import stanford.karel.*;
+
+public class StoneMasonKarel extends SuperKarel {
+	public void run() {
+		AscendAndRepair();
+		DescendColumn();
+		RepairRestColumns();
+	}
+	
+/* Karel moves North and repairs column as she goes
+ */
+private void AscendAndRepair() {
+	while(notFacingNorth()) {
+		turnLeft();
+	}
+	while(frontIsClear())
+	{
+		if(noBeepersPresent()) {
+			putBeeper();
+		}
+		move();
+	}
+}
+
+/* Karel returns back to ground after completing repair. 
+ * Pre-condition : Karel is facing north towards wall front.
+ * Post-condition : Karel is grounded and facing east 
+ */
+private void DescendColumn() {
+	if(noBeepersPresent()) { //checks for fencepost error(OBOB)
+		putBeeper();
+	}
+	turnAround();
+	while(frontIsClear()) {
+		move();
+	}
+	turnLeft();
+}
+
+/* Karel moves to next column and repeats :-
+ * Ascend & repair, and Descend column
+ * Pre conditions : Karol must be facing east, as check for column-site
+ */
+private void RepairRestColumns() {
+	while(frontIsClear()&& facingEast()) { //condition to test whether Karol is at column site
+		MoveToNextColumn();
+		if(facingEast()) { //condition to test whether Karol is at column site
+			AscendAndRepair();
+			DescendColumn();
+		}
+	}
+}
+
+/* Moves Karol to next column located 4 units ahead;
+ * If wall is encountered on path, Karel turns south and exit loop.
+ * Pre-conditions : Karel is grounded and facing east.
+ * Post-conditions : Karel reaches next column and face east
+ * or stand next to wall on non-column site, facing south.
+ */
+private void MoveToNextColumn() {
+	for(int i=0; i<4; i++) {
+		if(frontIsClear()&& facingEast()) {
+			move();
+		} else {
+			turnRight();
+		}
+	}
+}
+}
