@@ -1,0 +1,123 @@
+
+ * File: CheckerboardKarel.java
+ * ----------------------------
+ * When you finish writing it, the CheckerboardKarel class should draw
+ * a checkerboard using beepers, as described in Assignment 1.  You
+ * should make sure that your program works for all of the sample
+ * worlds supplied in the starter folder.
+ */
+
+import stanford.karel.*;
+
+public class CheckerboardKarel extends SuperKarel {
+	
+	public void run() {
+		FillBeepers(); //Specifically deals with first row;
+		ChangeDirections();//Takes U-turns onto next row;
+		RepeatForAllRows();//except top row
+		FillBeepers();//Specifically deals with top row;
+	}
+	
+	/*Conditions checks for top row; exists loop once satisfied
+	 */
+	private void RepeatForAllRows() {
+		while(facingEast() && leftIsClear() || facingWest() && rightIsClear()) {
+			FillBeepers();
+			ChangeDirections();
+		}
+	}
+	
+	/* Incorporates special conditions as mentioned in in line comments.
+	 * Method seeks fill row with beepers on alternative positions
+	 */
+	private void FillBeepers() {
+		if(frontIsClear()) { //check for column > 1 dimension
+			FillBeepersInRow();
+			CheckOddCorners();//fencepost error check -> fills one beeper if odd
+		}
+		else { // if column = 1
+			FillBeepersInColumn();
+		}		
+	}
+	
+	/*Deals with special case of one column figure 
+	 */
+	private void FillBeepersInColumn() {
+		if(facingEast()) {
+			turnLeft();
+		}
+		else {
+			turnRight();
+		}
+		if(frontIsClear()) {
+			FillBeepersInRow();// fill the column as row is filled
+			CheckOddCorners();
+		}
+	}
+	
+	/*
+	 * Self explanatory : fills beepers at alternative positions in a line
+	 */
+	private void FillBeepersInRow() {
+		while(frontIsClear()) {
+			if(noBeepersPresent()) {
+				putBeeper();
+				}
+			move();
+			if(frontIsClear()) {
+				move();
+			}
+		}
+	}
+	
+	/*
+	 * For fencepost error check -> It fills one beeper at end of odd-corners line
+	 */
+	private void CheckOddCorners() {
+		turnAround();
+		move();
+		move();
+		if(beepersPresent()) {
+			turnAround();
+			TwoSteps();
+			putBeeper();
+		}
+		else {
+			turnAround();
+			TwoSteps();
+		}
+	}
+	
+	//for avoiding repetition
+	private void TwoSteps() {
+		move();
+		move();
+	}
+	
+	
+	private void ChangeDirections() {
+		if(leftIsClear()&& facingEast()) {
+			if(beepersPresent()) {
+				turnLeft();
+				move();
+				turnLeft();
+				move();
+		}
+			else {
+				turnLeft();
+				move();
+				putBeeper();
+				turnLeft();
+				TwoSteps();
+		}
+	}
+		else {
+			if(rightIsClear() && facingWest()) {
+			turnRight();
+			move();
+			turnRight();
+			}
+		}
+	}
+
+}
