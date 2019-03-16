@@ -1,0 +1,48 @@
+/*
+ * File: DoubleBeeper.java
+ * Author : Chirag Maroke
+ * Date : 16th March 2019
+ * Citations : N.A.
+ * --------------------------------
+ * DoubleBeeper program seeks to double the beepers without
+ * the use of any counter.
+ */
+
+import stanford.karel.*;
+
+public class DoubleBeeper extends SuperKarel {
+	
+	public void run() {
+		MoveToBeeper();
+		doubleBeeper();
+	}
+	
+	private void MoveToBeeper() {
+		while(noBeepersPresent()) {
+			move();
+		}
+	}
+	
+	private void doubleBeeper() {
+		while(beepersPresent()) { // for every beeeper picked, Karel puts two beeper on adjacent corner)
+			pickBeeper();
+			move();
+			putBeeper();
+			putBeeper();
+			turnAround();
+			move();
+			turnAround();
+		}
+		move();
+		turnAround();
+		while(beepersPresent()) { // returns all beepers(2x) to initial position.
+			pickBeeper();
+			move();
+			putBeeper();
+			turnAround();
+			move();
+			turnAround();			
+	}
+			
+		}
+}
