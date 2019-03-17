@@ -1,0 +1,50 @@
+/*
+ * File: MazeRunner.java
+ * Author : Chirag Maroke
+ * Date : 17th March 2019
+ * Citations : Stanford(Karel Reader)
+ * --------------------------------
+ * MazeRunner program finds exit(beeper)to the maze
+ * while following right-hand rule(i.e. keeping
+ * right hand on wall always while moving)
+ * Assumptions : Maze is perfect - i.e. no loops(islands)
+ */
+
+import stanford.karel.*;
+
+public class MazeRunner extends SuperKarel {
+	public void run() {
+		MoveLeftOfWall(); //Wall will be Right to Karel as precondition to solving maze
+		SolveMaze(); //start with precondition of Wall on right of Karel
+	}
+	
+	/*
+	 * Method allows variable initial position of Karel.
+	 * Karel will move to wall and situate itself on left of the Wall.
+	 */
+	private void MoveLeftOfWall() {
+		while(frontIsClear()) {
+			move();
+		}
+		while(frontIsBlocked()) {
+			turnLeft();
+		}
+	}
+
+	/* Each iteration runs at one corner. It seeks to keep wall on right side.
+	 * Takes one step every iteration and ends when beeper(exit) is found.
+	 * Pre-conditions : Wall is on right of Karel
+	 */
+	private void SolveMaze() {
+		while(noBeepersPresent()) {
+			if(rightIsClear()) {
+				turnRight();
+			}
+			while(frontIsBlocked()) {
+				turnLeft();
+			}
+			move();
+		}
+	}
+}
+
