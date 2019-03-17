@@ -1,0 +1,88 @@
+/*
+ * File: SpelunkerKarel.java
+ * Author : Chirag Maroke
+ * Date : 17th March 2019
+ * Citations : N.A.
+ * --------------------------------
+ * SpelunkerKarel program seeks to extract beepers from caves, and 
+ * place it on the horizontal surface line above respective caves.
+ */
+
+import stanford.karel.*;
+
+public class SpelunkerKarel extends SuperKarel {
+	
+	public void run() {
+		while(frontIsClear()) {
+		DetectCaveAndExtractBeeper();
+		}
+		DetectCaveAndExtractBeeper(); // for fence-post error check. detect cave at easternmost end.
+	}
+	/* 
+	 * Pre-conditions : Karel facing east at surface position.
+	 */
+	private void DetectCaveAndExtractBeeper() {
+		if(rightIsClear()) { //detect cave
+			turnRight();
+			ExtractBeeperFromCave(); 
+		}
+		else {
+			moveToNextCorner(); //when no cave detected
+		}
+	}
+	
+	/* Pre-conditions : Cave is detected by Karel
+	 */
+	private void ExtractBeeperFromCave() {
+		diveIntoCave();
+		while(beepersPresent()) { //moves to and fro between cave end to surface until all beepers removed
+			pickBeeper();
+			turnAround();
+			CarryBeeperToSurface();
+			putBeeper();
+			turnAround();
+			diveIntoCave();
+		}
+		ReturnToSurface(); //when all beepers have been taken to surface
+	}
+	
+	/*
+	 * Returns to surface after extraction is completed in one cave.
+	 * After return, move to next corner.
+	 */
+	private void ReturnToSurface() {
+		turnAround();
+		while(noBeepersPresent()) {
+			move();
+		}
+		turnRight();
+		moveToNextCorner();
+	}
+	
+	/*
+	 * Self-explanatory
+	 */
+	private void diveIntoCave() {
+		while(frontIsClear()) {
+			move();
+		}
+	}
+	
+	/*
+	 * Self-explanatory
+	 */
+	private void CarryBeeperToSurface() {
+		while(rightIsBlocked() && leftIsBlocked()) {
+			move();
+		}
+	}
+	
+	/*
+	 * Self-explanatory
+	 */
+	private void moveToNextCorner() {
+		if(frontIsClear()) {
+			move();
+		}
+	}
+}
