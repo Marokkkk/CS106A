@@ -1,0 +1,77 @@
+*
+ * File : StackerKarel.java
+ * Author : Chirag Maroke
+ * Date : 19th March 2019
+ * Citations : N.A.
+ * --------------------------------
+ * StackerKarel program seeks to stack beepers on left side of row, and 
+ * in doing so, it picks only first contiguous line of beepers, leaving
+ * other beepers untouched.
+ */
+
+import stanford.karel.* ; 
+
+public class StackerKarel extends SuperKarel {
+	/*
+	 * Pre-conditions : Initial state of Karel is 1*1 of grid, and facing east;
+	 * Assumption of beeper on left-most column is made at every row.
+	 */
+	public void run() {
+		while(frontIsClear()) { // loop breaks when Karel is facing left wall
+			StackRow();
+			MoveToNextRow();
+			}	
+		}
+	
+	/*
+	 * Stacking is done from right to left; therefore, first move the Karel at
+	 * end of contiguous line of beeper.
+	 */
+	private void StackRow() {
+		FindEndOfBeeperLine();
+		while(frontIsClear()) {
+			MoveBeepers();
+		}
+	}
+	
+	private void FindEndOfBeeperLine() {
+		while(beepersPresent()) {
+			move();
+		}
+		turnAround();
+		move();
+	}
+	
+	private void StepBack() { //method for reduce code lines
+		turnAround();
+		move();
+		turnAround ();
+	}
+	
+	/*
+	 * Moves the beepers of one corner to front corner, until all are
+	 * stacked at left most corner.
+	 */
+	private void MoveBeepers() {
+		while(beepersPresent()) {
+		pickBeeper();
+		move();
+		putBeeper();
+		StepBack();
+		}
+		move();
+	}
+	
+	/*
+	 * Change to next row at end of stacking of one row;
+	 * if karel is at top most row, then it will end facing wall.
+	 */
+	private void MoveToNextRow() {
+		if(rightIsClear()) {
+			turnRight();
+			move();
+			turnRight();
+		}
+	}
+	
+}
