@@ -1,0 +1,43 @@
+/*
+ * File: TriangleKarel.java
+ * Author : Chirag Maroke
+ * Date : 19 March 2019
+ * Citation : N.A.
+ * --------------------------
+ * Program creates StoneMasonKarel subclass,
+ * and instructs to repair the columns spaced 4 units apart.
+ */
+
+import stanford.karel.*;
+
+public class TriangleKarel extends SuperKarel {
+	public void run() {
+		while(rightIsClear()) {
+		MoveToNextRow();
+		FillOneRow();
+		MovetoHypotenese();
+		}
+	}
+	
+	private void FillOneRow() {
+		while(frontIsClear()) {
+			putBeeper();
+			move();
+			}
+		putBeeper();
+		}
+	
+	private void MovetoHypotenese() {
+		turnAround();
+		while(beepersPresent()) {
+			move();
+		}
+	}
+	
+	private void MoveToNextRow() {
+		turnRight();
+		move();
+		turnRight();
+	}
+	
+}
